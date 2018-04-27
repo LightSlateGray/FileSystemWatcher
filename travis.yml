@@ -1,0 +1,11 @@
+language: csharp
+solution: FileSystemWatcher.sln
+mono: # Disabled in order to use .NET Core to build 
+  - none
+dotnet:
+  - 2.1.104
+script: # the following commands define the build steps
+  - dotnet restore
+  - dotnet test -c Release FileSystemWatcher.Test
+  - dotnet build -c Release FileSystemWatcher.sln
+  
