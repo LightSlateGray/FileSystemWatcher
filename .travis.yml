@@ -1,10 +1,15 @@
 language: csharp
 solution: FileSystemWatcher.sln
-mono: # Disabled in order to use .NET Core to build 
-  - none
-dotnet: # Specify the version of the .NET Core SDK to be used (not the .NET Core runtime)
-  - 2.1.4
-script: # The following commands define the build steps
+
+# Disabled in order to use .NET Core to build 
+mono: none
+
+# Specify the version of the .NET Core SDK to be used (not the .NET Core runtime)
+# Visit https://www.microsoft.com/net/download/all for a list of available downloads
+dotnet: 2.1.105
+
+# The following commands define the build steps
+script:
   - dotnet restore
   - dotnet test -c Release FileSystemWatcher.Test
   - dotnet build -c Release FileSystemWatcher.sln
