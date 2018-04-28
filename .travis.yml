@@ -11,6 +11,6 @@ dotnet: 2.1.105
 # The following commands define the build steps
 script:
   - dotnet restore
-  - dotnet test -c Release FileSystemWatcher.Test
-  - dotnet build -c Release FileSystemWatcher.sln
-  
+  - dotnet test --configuration Release FileSystemWatcher.Test
+  - dotnet build --configuration Release FileSystemWatcher.sln
+  - dotnet pack --no-build --configuration Release --include-source FileSystemWatcher
