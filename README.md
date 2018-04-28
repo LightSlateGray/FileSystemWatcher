@@ -1,6 +1,8 @@
 # FileSystemWatcher
 Simplification of the .NET FileSystemWatcher class
 
+https://travis-ci.org/LightSlateGray/FileSystemWatcher.svg?branch=travis-ci
+
 ## Description
 This project intends to simplify the usage of the [FileSystemWatcher](https://docs.microsoft.com/de-de/dotnet/api/system.io.filesystemwatcher?view=netcore-2.0) class provided by the .NET framework.
 
