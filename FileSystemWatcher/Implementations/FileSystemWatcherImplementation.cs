@@ -344,6 +344,8 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
         /// </param>
         public void OnRenamed(object sender, RenamedEventArgs eventArgs)
         {
+            // TODO (Sam): Change internal FileSystemWatcher to automatically watch for changes of the renamed/moved file
+
             this.FileSystemWatcherEventHandler?.OnRenamed(this, eventArgs);
         }
 
