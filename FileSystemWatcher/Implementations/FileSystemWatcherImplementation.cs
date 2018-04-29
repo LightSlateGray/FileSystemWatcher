@@ -31,6 +31,7 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
     using System;
     using System.ComponentModel;
     using System.IO;
+    using System.Linq;
     using System.Threading;
 
     /// <summary>
@@ -73,6 +74,10 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
         ///   A new instance of the <see cref="FileSystemWatcherImplementation"/> class if the supplied <paramref name="path"/>
         ///   is valid, otherwise <code>null</code>.
         /// </returns>
+        /// <exception cref="ArgumentException">
+        ///   If the supplied <paramref name="path"/> is <c>null</c>, an empty string or contains invalid characters.
+        ///   Additionally, an exception is thrown if the supplied <paramref name="path"/> refers to a non-existent directory.
+        /// </exception>
         public FileSystemWatcherImplementation(string path, IFileSystemWatcherEventHandler fileWatcherEventHandler = null)
         {
             // Store a reference to the supplied implementation of the IFileSystemWatcherEventHandler interface internally
@@ -81,25 +86,44 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
             // Trim the supplied path or fall back to an empty string
             path = path?.Trim() ?? string.Empty;
 
-            // Check if the supplied path refers to an existing file or an existing directory
-            var isExistingFile = File.Exists(path);
-            var isExistingDirectory = Directory.Exists(path);
+            // Throw an exception if the supplied path is null or an empty string
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException($"The supplied path is empty.", nameof(path));
+            }
 
-            // Throw an exception if the supplied path neither references a file nor a folder
-            if (!isExistingFile && !isExistingDirectory)
+            // Retrieve the file name part of the supplied path, but prevent directories to be mistaken as files
+            var fileName = Directory.Exists(path) || path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.InvariantCultureIgnoreCase)
+                ? string.Empty
+                : Path.GetFileName(path).Trim();
+
+            // Verify the supplied path does not contain any invalid characters
+            var isValidPathName = path.Contains(Path.DirectorySeparatorChar) && path.IndexOfAny(Path.GetInvalidPathChars()) == -1;
+            var isValidFileName = fileName.IndexOfAny(Path.GetInvalidFileNameChars()) == -1;
+            if (!isValidPathName || !isValidFileName)
             {
                 throw new ArgumentException($"The supplied path neither is a directory, nor a file: '{path}'.", nameof(path));
             }
 
+            // Check if the supplied path refers to a file
+            var isFile = !string.IsNullOrEmpty(fileName);
+
+            // Retrieve the path to the directory to watch for changes, ensuring that it exists
+            var directoryPath = isFile ? Directory.GetParent(path).FullName : path.TrimEnd(Path.DirectorySeparatorChar);
+            if (!Directory.Exists(directoryPath)) {
+                throw new ArgumentException($"The directory structure of the supplied path does not exist: '{path}'", nameof(path));
+            }
+
             // Set the FileSystemWatcherType accordingly
-            this.FileSystemWatcherType = isExistingFile ? FileSystemWatcherType.File : FileSystemWatcherType.Directory;
+            this.FileSystemWatcherType = isFile ? FileSystemWatcherType.File : FileSystemWatcherType.Directory;
 
             // Create a new FileSystemWatcher instance using the object initializer syntax, which is atomic by design
             this.fileSystemWatcher = new FileSystemWatcher()
             {
-                Path = isExistingFile ? Directory.GetParent(path).FullName : path,
-                Filter = isExistingFile ? Path.GetFileName(path) : null,
-                NotifyFilter = NotifyFilters.LastWrite | (isExistingFile ? NotifyFilters.FileName : NotifyFilters.DirectoryName)
+                Path = directoryPath,
+                Filter = isFile ? Path.GetFileName(path) : null,
+                IncludeSubdirectories = !isFile,
+                NotifyFilter = NotifyFilters.LastWrite | (isFile ? NotifyFilters.FileName : NotifyFilters.DirectoryName),
             };
         }
 
@@ -179,6 +203,14 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
                 }
             }
         }
+
+        /// <summary>
+        ///   Gets a value indicating whether the file or directory being watched by this implementation of the
+        ///   <see cref="IFileSystemWatcher"/> interface does exist within the file system.
+        /// </summary>
+        public bool Exists => this.FileSystemWatcherType == FileSystemWatcherType.File
+            ? File.Exists(this.FullPath)
+            : Directory.Exists(this.FullPath);
 
         /// <summary>
         ///   Gets or sets the <see cref="ISite"/> associated with the implementation of the <see cref="IFileSystemWatcher"/> interface.
