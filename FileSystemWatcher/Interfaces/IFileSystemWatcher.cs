@@ -72,6 +72,12 @@ namespace LightSlateGray.FileSystemWatcher.Interfaces
         bool IsWatching { get; }
 
         /// <summary>
+        ///   Gets a value indicating whether the file or directory being watched by this implementation of the
+        ///   <see cref="IFileSystemWatcher"/> interface does exist within the file system.
+        /// </summary>
+        bool Exists { get; }
+
+        /// <summary>
         ///   Starts up the implementation of the <see cref="IFileSystemWatcher"/> interface, which will set the value of
         ///   property <see cref="IsWatching"/> to <c>true</c> and trigger the corresponding callback methods of the
         ///   <see cref="IFileSystemWatcherEventHandler"/> for each detected change.
