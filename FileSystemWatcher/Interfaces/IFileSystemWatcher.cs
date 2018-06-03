@@ -33,7 +33,7 @@ namespace LightSlateGray.FileSystemWatcher.Interfaces
     /// <summary>
     ///   An interface providing some of the functionality of the <see cref="System.IO.FileSystemWatcher"/> class.
     /// </summary>
-    public interface IFileSystemWatcher : IFileSystemWatcherEventHandler, IComponent
+    public interface IFileSystemWatcher : IComponent
     {
         /// <summary>
         ///   Gets the name of the file or folder being watched by the implementation of the
