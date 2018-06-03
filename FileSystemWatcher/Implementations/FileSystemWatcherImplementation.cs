@@ -1,31 +1,33 @@
-﻿// <copyright file="FileSystemWatcherImplementation.cs">
-//   Copyright (c) 2018 LightSlateGray
-// </copyright>
-// <author>
-//   LightSlateGray
-// </author>
-// <date>
-//   2018-04-03
-// </date>
-// <summary>
-//   An implementation of the IFileSystemWatcher interface, which is used internally by the FileSystemWatcherFactory.
-// </summary>
-// <license>
-//   Licensed under the Apache License, Version 2.0 (the "License");
-//   you may not use this file except in compliance with the License.
-//   You may obtain a copy of the License at
-//   
-//     http://www.apache.org/licenses/LICENSE-2.0
-//   
-//   Unless required by applicable law or agreed to in writing, software
-//   distributed under the License is distributed on an "AS IS" BASIS,
-//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//   See the License for the specific language governing permissions and
-//   limitations under the License.
-// </license>
+﻿/// <copyright file="FileSystemWatcherImplementation.cs">
+///   Copyright (c) 2018 LightSlateGray
+/// </copyright>
+/// <author>
+///   LightSlateGray
+/// </author>
+/// <date>
+///   2018-04-03
+/// </date>
+/// <summary>
+///   An implementation of the IFileSystemWatcher interface, which is used internally by the FileSystemWatcherFactory.
+/// </summary>
+/// <license>
+///   Licensed under the Apache License, Version 2.0 (the "License");
+///   you may not use this file except in compliance with the License.
+///   You may obtain a copy of the License at
+///   
+///     http://www.apache.org/licenses/LICENSE-2.0
+///   
+///   Unless required by applicable law or agreed to in writing, software
+///   distributed under the License is distributed on an "AS IS" BASIS,
+///   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+///   See the License for the specific language governing permissions and
+///   limitations under the License.
+/// </license>
 
 namespace LightSlateGray.FileSystemWatcher.Implementations
 {
+    using Events;
+    using Extensions;
     using LightSlateGray.FileSystemWatcher.Enumerations;
     using LightSlateGray.FileSystemWatcher.Interfaces;
     using System;
@@ -37,7 +39,7 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
     /// <summary>
     ///   An implementation of the <see cref="IFileSystemWatcher"/> interface, which is used internally by the <see cref="FileSystemWatcherFactory"/>.
     /// </summary>
-    sealed class FileSystemWatcherImplementation : IFileSystemWatcher
+    internal sealed class FileSystemWatcherImplementation : IFileSystemWatcher
     {
         /// <summary>
         ///   A simple <see cref="Object"/> instance used to synchronize access to the <see cref="fileSystemWatcher"/> instance
@@ -150,7 +152,7 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
         /// </summary>
         public string MimeType => this.FileSystemWatcherType == FileSystemWatcherType.Directory
             ? "application/octet-stream"
-            : Path.GetExtension(this.Name); // TODO (Sam): Implement MIME type retrieval.
+            : Path.GetExtension(this.Name); // TODO (LightSlateGray): Implement MIME type retrieval.
 
         /// <summary>
         ///   Gets the enumeration value identifying the type currently being watched.
@@ -175,7 +177,7 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
                     this.StopWatching();
                 }
 
-                // TODO (Sam): Remove the possibility of event loss by not stop listening and collecting occurred events until the new handler is set
+                // TODO (LightSlateGray): Remove the possibility of event loss by not stop listening and collecting occurred events until the new handler is set
 
                 // Update the implementation of the IFileSystemWatcherEventHandler interface
                 this.fileSystemWatcherEventHandler = value;
@@ -230,7 +232,7 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
                 if (this.fileSystemWatcher != null)
                 {
                     /*
-                     * TODO (Sam): Ensure that only a single notification will be triggered for each change
+                     * TODO (LightSlateGray): Ensure that only a single notification will be triggered for each change
                      */
 
                     // Wire up the events with the internal FileSystemWatcher instance
@@ -271,7 +273,7 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
            }
         }
 
-        #region IFileSystemWatcherEventHandler methods
+        #region FileSystemWatcher event to IFileSystemWatcherEventHandler conversion
 
         /// <summary>
         ///   Event handler method for the <see cref="FileSystemWatcher.Changed"/> event.
@@ -282,9 +284,9 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
         /// <param name="eventArgs">
         ///   An instance of class <see cref="FileSystemEventArgs"/> containing information about the change.
         /// </param>
-        public void OnChanged(object sender, FileSystemEventArgs eventArgs)
+        private void OnChanged(object sender, FileSystemEventArgs eventArgs)
         {
-            this.FileSystemWatcherEventHandler?.OnChanged(this, eventArgs);
+            this.FileSystemWatcherEventHandler?.OnFileSystemWatcherEvent(this, eventArgs.ConvertToFileSystemWatcherEventArgs());
         }
 
         /// <summary>
@@ -297,9 +299,9 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
         ///   An instance of class <see cref="FileSystemEventArgs"/> containing information about the
         ///   newly created file or directory.
         /// </param>
-        public void OnCreated(object sender, FileSystemEventArgs eventArgs)
+        private void OnCreated(object sender, FileSystemEventArgs eventArgs)
         {
-            this.FileSystemWatcherEventHandler?.OnCreated(this, eventArgs);
+            this.FileSystemWatcherEventHandler?.OnFileSystemWatcherEvent(this, eventArgs.ConvertToFileSystemWatcherEventArgs());
         }
 
         /// <summary>
@@ -312,9 +314,9 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
         ///   An instance of class <see cref="FileSystemEventArgs"/> containing information about the
         ///   file or directory that has been deleted.
         /// </param>
-        public void OnDeleted(object sender, FileSystemEventArgs eventArgs)
+        private void OnDeleted(object sender, FileSystemEventArgs eventArgs)
         {
-            this.FileSystemWatcherEventHandler?.OnDeleted(this, eventArgs);
+            this.FileSystemWatcherEventHandler?.OnFileSystemWatcherEvent(this, eventArgs.ConvertToFileSystemWatcherEventArgs());
         }
 
         /// <summary>
@@ -324,12 +326,14 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
         ///   The sender of the event. Should be an instance of the <see cref="FileSystemWatcher"/> class.
         /// </param>
         /// <param name="eventArgs">
-        ///   An instance of class <see cref="System.IO.ErrorEventArgs"/> containing the <see cref="System.Exception"/>
+        ///   An instance of class <see cref="ErrorEventArgs"/> containing the <see cref="Exception"/>
         ///   that has occurred while trying to watch for changes to a specific file or directory.
         /// </param>
-        public void OnError(object sender, ErrorEventArgs eventArgs)
+        private void OnError(object sender, ErrorEventArgs eventArgs)
         {
-            this.FileSystemWatcherEventHandler?.OnError(this, eventArgs);
+            this.FileSystemWatcherEventHandler?.OnFileSystemWatcherEvent(
+                this,
+                new FileSystemWatcherErrorEventArgs(this.FullPath, this.Name, eventArgs.GetException()));
         }
 
         /// <summary>
@@ -342,11 +346,11 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
         ///   An instance of class <see cref="RenamedEventArgs"/> containing the previous and new name
         ///   of the file or directory that has been renamed.
         /// </param>
-        public void OnRenamed(object sender, RenamedEventArgs eventArgs)
+        private void OnRenamed(object sender, RenamedEventArgs eventArgs)
         {
-            // TODO (Sam): Change internal FileSystemWatcher to automatically watch for changes of the renamed/moved file
+            // TODO (LightSlateGray): Change internal FileSystemWatcher to automatically watch for changes of the renamed/moved file
 
-            this.FileSystemWatcherEventHandler?.OnRenamed(this, eventArgs);
+            this.FileSystemWatcherEventHandler?.OnFileSystemWatcherEvent(this, eventArgs.ConvertToFileSystemWatcherEventArgs());
         }
 
         #endregion
@@ -382,6 +386,7 @@ namespace LightSlateGray.FileSystemWatcher.Implementations
                 this.Disposed?.Invoke(this, EventArgs.Empty);
             }
         }
+
         #endregion
     }
 }
