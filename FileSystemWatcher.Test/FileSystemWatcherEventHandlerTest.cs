@@ -30,6 +30,8 @@ namespace FileSystemWatcher.Test
     using System.IO;
     using System.Threading;
     using LightSlateGray.FileSystemWatcher;
+    using LightSlateGray.FileSystemWatcher.Enumerations;
+    using LightSlateGray.FileSystemWatcher.Events;
     using LightSlateGray.FileSystemWatcher.Interfaces;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
@@ -92,7 +94,7 @@ namespace FileSystemWatcher.Test
             Assert.IsFalse(fileSystemWatcher.Exists, $"The file {fileInfo.FullName} should not exists within the file system.");
 
             // Helper variables to verify the expectations
-            var eventChangeType = WatcherChangeTypes.All;
+            var eventType = FileSystemWatcherEventType.Undefined;
             var eventFileName = string.Empty;
             var eventFullPath = string.Empty;
             var eventSender = default(object);
@@ -103,11 +105,11 @@ namespace FileSystemWatcher.Test
             // Create a mocked implementation of the IFileSystemWatcherEventHandler interface
             var eventHandlerMock = new Mock<IFileSystemWatcherEventHandler>();
             eventHandlerMock
-                .Setup(mock => mock.OnCreated(It.IsAny<IFileSystemWatcher>(), It.IsAny<FileSystemEventArgs>()))
-                .Callback<object, FileSystemEventArgs>((sender, eventArgs) =>
+                .Setup(mock => mock.OnFileSystemWatcherEvent(It.IsAny<IFileSystemWatcher>(), It.IsAny<FileSystemWatcherEventArgs>()))
+                .Callback<object, FileSystemWatcherEventArgs>((sender, eventArgs) =>
                 {
                     // Update the helper variables
-                    eventChangeType = eventArgs.ChangeType;
+                    eventType = eventArgs.EventType;
                     eventFileName = eventArgs.Name;
                     eventFullPath = eventArgs.FullPath;
                     eventSender = sender;
@@ -131,13 +133,16 @@ namespace FileSystemWatcher.Test
             // Wait for the event handler callback method to be invoked, but at most for five seconds
             eventWaitHandle.WaitOne(TimeSpan.FromSeconds(5.0d));
 
+            // Refresh the FileInfo instance to update its internal state
+            fileInfo.Refresh();
+
             // Verify that the file does exist within the file system
             Assert.IsTrue(fileInfo.Exists, $"The newly created file {fileInfo.FullName} should exists within the file system.");
             Assert.IsTrue(fileSystemWatcher.Exists, $"The newly created file {fileInfo.FullName} should exists within the file system.");
 
             // Verify that the expected arguments have been supplied to callback method of the event handler
             Assert.AreSame(fileSystemWatcher, eventSender, $"The {nameof(fileSystemWatcher)} should be the sender of the event.");
-            Assert.AreEqual(eventChangeType, WatcherChangeTypes.Created, $"The event handler callback should be called for change type {WatcherChangeTypes.Created}.");
+            Assert.AreEqual(eventType, FileSystemWatcherEventType.Create, $"The event handler callback should be called for change type {FileSystemWatcherEventType.Create}.");
             Assert.AreEqual(eventFileName, fileSystemWatcher.Name, $"The event handler callback should be called for file {fileSystemWatcher.Name}.");
             Assert.AreEqual(eventFullPath, fileSystemWatcher.FullPath, $"The event handler callback should be called for a file within {fileSystemWatcher.FullPath}.");
         }
@@ -160,7 +165,7 @@ namespace FileSystemWatcher.Test
             Assert.IsTrue(fileSystemWatcher.Exists, $"The file {fileInfo.FullName} should exists within the file system.");
 
             // Helper variables to verify the expectations
-            var eventChangeType = WatcherChangeTypes.All;
+            var eventType = FileSystemWatcherEventType.Undefined;
             var eventFileName = string.Empty;
             var eventFullPath = string.Empty;
             var eventSender = default(object);
@@ -171,11 +176,11 @@ namespace FileSystemWatcher.Test
             // Create a mocked implementation of the IFileSystemWatcherEventHandler interface
             var eventHandlerMock = new Mock<IFileSystemWatcherEventHandler>();
             eventHandlerMock
-                .Setup(mock => mock.OnDeleted(It.IsAny<IFileSystemWatcher>(), It.IsAny<FileSystemEventArgs>()))
-                .Callback<object, FileSystemEventArgs>((sender, eventArgs) =>
+                .Setup(mock => mock.OnFileSystemWatcherEvent(It.IsAny<IFileSystemWatcher>(), It.IsAny<FileSystemWatcherEventArgs>()))
+                .Callback<object, FileSystemWatcherEventArgs>((sender, eventArgs) =>
                 {
                     // Update the helper variables
-                    eventChangeType = eventArgs.ChangeType;
+                    eventType = eventArgs.EventType;
                     eventFileName = eventArgs.Name;
                     eventFullPath = eventArgs.FullPath;
                     eventSender = sender;
@@ -199,13 +204,16 @@ namespace FileSystemWatcher.Test
             // Wait for the event handler callback method to be invoked, but at most for five seconds
             eventWaitHandle.WaitOne(TimeSpan.FromSeconds(5.0d));
 
+            // Refresh the FileInfo instance to update its internal state
+            fileInfo.Refresh();
+
             // Verify that the file does no longer exist within the file system
             Assert.IsFalse(fileInfo.Exists, $"The deleted file {fileInfo.FullName} should no longer exist within the file system.");
             Assert.IsFalse(fileSystemWatcher.Exists, $"The deleted file {fileInfo.FullName} should no longer exist within the file system.");
 
             // Verify that the expected arguments have been supplied to callback method of the event handler
             Assert.AreSame(fileSystemWatcher, eventSender, $"The {nameof(fileSystemWatcher)} should be the sender of the event.");
-            Assert.AreEqual(eventChangeType, WatcherChangeTypes.Deleted, $"The event handler callback should be called for change type {WatcherChangeTypes.Deleted}.");
+            Assert.AreEqual(eventType, FileSystemWatcherEventType.Delete, $"The event handler callback should be called for change type {FileSystemWatcherEventType.Delete}.");
             Assert.AreEqual(eventFileName, fileSystemWatcher.Name, $"The event handler callback should be called for file {fileSystemWatcher.Name}.");
             Assert.AreEqual(eventFullPath, fileSystemWatcher.FullPath, $"The event handler callback should be called for a file within {fileSystemWatcher.FullPath}.");
         }
@@ -228,7 +236,7 @@ namespace FileSystemWatcher.Test
             Assert.IsTrue(fileSystemWatcher.Exists, $"The file {fileInfo.FullName} should exists within the file system.");
 
             // Helper variables to verify the expectations
-            var eventChangeType = WatcherChangeTypes.All;
+            var eventType = FileSystemWatcherEventType.Undefined;
             var eventFileName = string.Empty;
             var eventFullPath = string.Empty;
             var eventSender = default(object);
@@ -239,11 +247,11 @@ namespace FileSystemWatcher.Test
             // Create a mocked implementation of the IFileSystemWatcherEventHandler interface
             var eventHandlerMock = new Mock<IFileSystemWatcherEventHandler>();
             eventHandlerMock
-                .Setup(mock => mock.OnChanged(It.IsAny<IFileSystemWatcher>(), It.IsAny<FileSystemEventArgs>()))
-                .Callback<object, FileSystemEventArgs>((sender, eventArgs) =>
+                .Setup(mock => mock.OnFileSystemWatcherEvent(It.IsAny<IFileSystemWatcher>(), It.IsAny<FileSystemWatcherEventArgs>()))
+                .Callback<object, FileSystemWatcherEventArgs>((sender, eventArgs) =>
                 {
                     // Update the helper variables
-                    eventChangeType = eventArgs.ChangeType;
+                    eventType = eventArgs.EventType;
                     eventFileName = eventArgs.Name;
                     eventFullPath = eventArgs.FullPath;
                     eventSender = sender;
@@ -273,7 +281,7 @@ namespace FileSystemWatcher.Test
 
             // Verify that the expected arguments have been supplied to callback method of the event handler
             Assert.AreSame(fileSystemWatcher, eventSender, $"The {nameof(fileSystemWatcher)} should be the sender of the event.");
-            Assert.AreEqual(eventChangeType, WatcherChangeTypes.Changed, $"The event handler callback should be called for change type {WatcherChangeTypes.Changed}.");
+            Assert.AreEqual(eventType, FileSystemWatcherEventType.Change, $"The event handler callback should be called for change type {FileSystemWatcherEventType.Change}.");
             Assert.AreEqual(eventFileName, fileSystemWatcher.Name, $"The event handler callback should be called for file {fileSystemWatcher.Name}.");
             Assert.AreEqual(eventFullPath, fileSystemWatcher.FullPath, $"The event handler callback should be called for a file within {fileSystemWatcher.FullPath}.");
         }
@@ -296,11 +304,11 @@ namespace FileSystemWatcher.Test
             Assert.IsTrue(fileSystemWatcher.Exists, $"The file {fileInfo.FullName} should exists within the file system.");
 
             // Helper variables to verify the expectations
-            var eventChangeType = WatcherChangeTypes.All;
+            var eventType = FileSystemWatcherEventType.Undefined;
             var eventFileName = string.Empty;
             var eventFullPath = string.Empty;
-            var eventOldFileName = string.Empty;
-            var eventOldFullPath = string.Empty;
+            var eventPreviousFileName = string.Empty;
+            var eventPreviousFullPath = string.Empty;
             var eventSender = default(object);
 
             // Create an instance of the EventWaitHandle class to wait for the callback to be invoked
@@ -309,15 +317,18 @@ namespace FileSystemWatcher.Test
             // Create a mocked implementation of the IFileSystemWatcherEventHandler interface
             var eventHandlerMock = new Mock<IFileSystemWatcherEventHandler>();
             eventHandlerMock
-                .Setup(mock => mock.OnRenamed(It.IsAny<IFileSystemWatcher>(), It.IsAny<RenamedEventArgs>()))
-                .Callback<object, RenamedEventArgs>((sender, eventArgs) =>
+                .Setup(mock => mock.OnFileSystemWatcherEvent(It.IsAny<IFileSystemWatcher>(), It.IsAny<FileSystemWatcherEventArgs>()))
+                .Callback<object, FileSystemWatcherEventArgs>((sender, eventArgs) =>
                 {
+                    // Cast the supplied instance to the expected type, forcing an exception if this cast is not possible
+                    var renameEventArgs = (FileSystemWatcherRenameEventArgs)eventArgs;
+
                     // Update the helper variables
-                    eventChangeType = eventArgs.ChangeType;
-                    eventFileName = eventArgs.Name;
-                    eventFullPath = eventArgs.FullPath;
-                    eventOldFileName = eventArgs.OldName;
-                    eventOldFullPath = eventArgs.OldFullPath;
+                    eventType = renameEventArgs.EventType;
+                    eventFileName = renameEventArgs.Name;
+                    eventFullPath = renameEventArgs.FullPath;
+                    eventPreviousFileName = renameEventArgs.PreviousName;
+                    eventPreviousFullPath = renameEventArgs.PreviousFullPath;
                     eventSender = sender;
 
                     // Set the event handle to notify the waiting thread that the event callback method has been handled
@@ -358,10 +369,9 @@ namespace FileSystemWatcher.Test
 
             // Verify that the expected arguments have been supplied to callback method of the event handler
             Assert.AreSame(fileSystemWatcher, eventSender, $"The {nameof(fileSystemWatcher)} should be the sender of the event.");
-            Assert.AreEqual(eventChangeType, WatcherChangeTypes.Renamed, $"The event handler callback should be called for change type {WatcherChangeTypes.Renamed}.");
-            Assert.AreEqual(eventOldFileName, fileSystemWatcher.Name, $"The event handler callback should be called for file {fileSystemWatcher.Name}.");
-            Assert.AreEqual(eventOldFullPath, fileSystemWatcher.FullPath, $"The event handler callback should be called for a file within {fileSystemWatcher.FullPath}.");
+            Assert.AreEqual(eventType, FileSystemWatcherEventType.Rename, $"The event handler callback should be called for change type {FileSystemWatcherEventType.Rename}.");
+            Assert.AreEqual(eventPreviousFileName, fileSystemWatcher.Name, $"The event handler callback should be called for file {fileSystemWatcher.Name}.");
+            Assert.AreEqual(eventPreviousFullPath, fileSystemWatcher.FullPath, $"The event handler callback should be called for a file within {fileSystemWatcher.FullPath}.");
         }
     }
-
 }

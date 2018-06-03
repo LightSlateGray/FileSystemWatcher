@@ -30,7 +30,6 @@ namespace FileSytemWatcher.Test
     using System.IO;
     using LightSlateGray.FileSystemWatcher;
     using LightSlateGray.FileSystemWatcher.Enumerations;
-    using LightSlateGray.FileSystemWatcher.Interfaces;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
