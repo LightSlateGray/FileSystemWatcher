@@ -9,6 +9,7 @@
     <Product>LightSlateGray.FileSystemWatcher.Test</Product>
     <PackageProjectUrl>https://www.github.com/LightSlateGray/FileSystemWatcher</PackageProjectUrl>
     <RepositoryUrl>https://www.github.com/LightSlateGray/FileSystemWatcher</RepositoryUrl>
+    <AssemblyName>LightSlateGray.FileSystemWatcher.Test</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

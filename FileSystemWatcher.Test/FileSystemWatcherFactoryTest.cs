@@ -24,7 +24,7 @@
 ///   limitations under the License.
 /// </license>
 
-namespace FileSytemWatcher.Test
+namespace LightSlateGray.FileSystemWatcher.Test
 {
     using System;
     using System.IO;

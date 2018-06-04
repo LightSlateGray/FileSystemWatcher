@@ -8,7 +8,7 @@
 ///   2018-04-28
 /// </date>
 /// <summary>
-///   Unit test fixture for interface <see cref="LightSlateGray.FileSystemWatcher.Interfaces.IFileWatcherEventHandler"/>.
+///   Unit test fixture for interface <see cref="LightSlateGray.FileSystemWatcher.Interfaces.IFileSystemWatcherEventHandler"/>.
 /// </summary>
 /// <license>
 ///   Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +24,7 @@
 ///   limitations under the License.
 /// </license>
 
-namespace FileSystemWatcher.Test
+namespace LightSlateGray.FileSystemWatcher.Test
 {
     using System;
     using System.IO;
@@ -37,7 +37,7 @@ namespace FileSystemWatcher.Test
     using Moq;
 
     /// <summary>
-    ///   Unit test fixture for interface <see cref="LightSlateGray.FileSystemWatcher.Interfaces.IFileWatcherEventHandler"/>.
+    ///   Unit test fixture for interface <see cref="IFileSystemWatcherEventHandler"/>.
     /// </summary>
     [TestClass]
     public class FileSystemWatcherEventHandlerTest
