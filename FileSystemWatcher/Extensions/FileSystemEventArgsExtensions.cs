@@ -101,19 +101,19 @@ namespace LightSlateGray.FileSystemWatcher.Extensions
                 var changeType = fileSystemEventArgs.ChangeType;
 
                 // Check enumeration value of property ChangeType which internally uses flags to indicate the type of change
-                if ((changeType & WatcherChangeTypes.Changed) != 0)
+                if ((changeType ^ WatcherChangeTypes.Changed) == 0)
                 {
                     return FileSystemWatcherEventType.Change;
                 }
-                else if ((changeType & WatcherChangeTypes.Created) != 0)
+                else if ((changeType ^ WatcherChangeTypes.Created) == 0)
                 {
                     return FileSystemWatcherEventType.Create;
                 }
-                else if((changeType & WatcherChangeTypes.Deleted) != 0)
+                else if((changeType ^ WatcherChangeTypes.Deleted) == 0)
                 {
                     return FileSystemWatcherEventType.Delete;
                 }
-                else if ((changeType & WatcherChangeTypes.Renamed) != 0)
+                else if ((changeType ^ WatcherChangeTypes.Renamed) == 0)
                 {
                     return FileSystemWatcherEventType.Rename;
                 }
