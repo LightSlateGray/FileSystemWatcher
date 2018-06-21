@@ -1,7 +1,7 @@
 # FileSystemWatcher
 Simplification of the .NET FileSystemWatcher class
 
-https://travis-ci.org/LightSlateGray/FileSystemWatcher.svg?branch=travis-ci
+[![Build Status | branch travis-ci](https://travis-ci.org/LightSlateGray/FileSystemWatcher.svg?branch=travis-ci)](https://travis-ci.org/LightSlateGray/FileSystemWatcher)
 
 ## Description
 This project intends to simplify the usage of the [FileSystemWatcher](https://docs.microsoft.com/de-de/dotnet/api/system.io.filesystemwatcher?view=netcore-2.0) class provided by the .NET framework.
@@ -15,7 +15,7 @@ This project intends to simplify the usage of the [FileSystemWatcher](https://do
   * Provide additional information within the event arguments
 
 ## Requirements
-* This project is built upon the [.NET Standard 2.0](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md), which is the first version of the API to inclue the FileSystemWatcher class.
+* This project is built upon the [.NET Standard 2.0](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md), which is the first version of the API to include the FileSystemWatcher class.
 
 ## License
 This project is licensed under the Apache License 2.0 - see the [LICENSE](./LICENSE) file for details.
