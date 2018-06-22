@@ -1,4 +1,4 @@
-﻿/// <copyright file="FileSystemEventArgsExtensions.cs">
+/// <copyright file="FileSystemEventArgsExtensions.cs">
 ///   Copyright (c) 2018 LightSlateGray
 /// </copyright>
 /// <author>

@@ -1,4 +1,4 @@
-﻿/// <copyright file="FileSystemWatcherEventType.cs">
+/// <copyright file="FileSystemWatcherEventType.cs">
 ///   Copyright (c) 2018 LightSlateGray
 /// </copyright>
 /// <author>

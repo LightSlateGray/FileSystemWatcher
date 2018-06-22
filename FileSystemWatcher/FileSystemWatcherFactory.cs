@@ -1,4 +1,4 @@
-﻿/// <copyright file="FileSystemWatcherFactory.cs">
+/// <copyright file="FileSystemWatcherFactory.cs">
 ///   Copyright (c) 2018-2018 LightSlateGray
 /// </copyright>
 /// <author>

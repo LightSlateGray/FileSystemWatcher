@@ -1,4 +1,4 @@
-﻿/// <copyright file="FileSystemWatcherFactoryTest.cs">
+/// <copyright file="FileSystemWatcherFactoryTest.cs">
 ///   Copyright (c) 2018 LightSlateGray
 /// </copyright>
 /// <author>

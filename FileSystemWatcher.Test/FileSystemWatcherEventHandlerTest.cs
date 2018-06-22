@@ -1,4 +1,4 @@
-﻿/// <copyright file="FileSystemWatcherEventHandlerTest.cs">
+/// <copyright file="FileSystemWatcherEventHandlerTest.cs">
 ///   Copyright (c) 2018 LightSlateGray
 /// </copyright>
 /// <author>
@@ -146,7 +146,7 @@ namespace LightSlateGray.FileSystemWatcher.Test
             Assert.AreEqual(eventFileName, fileSystemWatcher.Name, $"The event handler callback should be called for file {fileSystemWatcher.Name}.");
             Assert.AreEqual(eventFullPath, fileSystemWatcher.FullPath, $"The event handler callback should be called for a file within {fileSystemWatcher.FullPath}.");
         }
-        
+
         /// <summary>
         ///   Verifies that the deletion of an existing file will invoke the corresponding event handler callback method
         ///   while the implementation of the <see cref="IFileSystemWatcher"/> instance is actively watching.
@@ -285,7 +285,7 @@ namespace LightSlateGray.FileSystemWatcher.Test
             Assert.AreEqual(eventFileName, fileSystemWatcher.Name, $"The event handler callback should be called for file {fileSystemWatcher.Name}.");
             Assert.AreEqual(eventFullPath, fileSystemWatcher.FullPath, $"The event handler callback should be called for a file within {fileSystemWatcher.FullPath}.");
         }
-        
+
         /// <summary>
         ///   Verifies that changing the file name of an existing file will invoke the corresponding event handler callback method
         ///   while the implementation of the <see cref="IFileSystemWatcher"/> instance is actively watching.
@@ -368,7 +368,7 @@ namespace LightSlateGray.FileSystemWatcher.Test
             Assert.IsTrue(fileInfo.Exists, $"The file {fileInfo.FullName} should exists within the file system.");
 
             // Verify that the expected arguments have been supplied to callback method of the event handler
-            Assert.AreSame(fileSystemWatcher, eventSender, $"The {nameof(fileSystemWatcher)} should be the sender of the event.");
+            Assert.AreSame(fileSystemWatcher, eventSender, $"The {nameof(FileSystemWatcher)} {fileSystemWatcher} should be the sender of the event, not {eventSender}.");
             Assert.AreEqual(eventType, FileSystemWatcherEventType.Rename, $"The event handler callback should be called for change type {FileSystemWatcherEventType.Rename}.");
             Assert.AreEqual(eventPreviousFileName, fileSystemWatcher.Name, $"The event handler callback should be called for file {fileSystemWatcher.Name}.");
             Assert.AreEqual(eventPreviousFullPath, fileSystemWatcher.FullPath, $"The event handler callback should be called for a file within {fileSystemWatcher.FullPath}.");

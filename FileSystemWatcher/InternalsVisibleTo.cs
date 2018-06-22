@@ -1,4 +1,4 @@
-﻿/// <copyright file="InternalsVisibleTo.cs">
+/// <copyright file="InternalsVisibleTo.cs">
 ///   Copyright (c) 2018 LightSlateGray
 /// </copyright>
 /// <author>

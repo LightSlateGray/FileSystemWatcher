@@ -1,4 +1,4 @@
-﻿/// <copyright file="FileSystemWatcherRenameEventArgs.cs">
+/// <copyright file="FileSystemWatcherRenameEventArgs.cs">
 ///   Copyright (c) 2018 LightSlateGray
 /// </copyright>
 /// <author>
