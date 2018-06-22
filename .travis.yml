@@ -15,4 +15,13 @@ script:
   - dotnet build --configuration Release FileSystemWatcher.sln
   - dotnet pack --no-build --configuration Release --include-source FileSystemWatcher
 
-# TODO Deploy/publish the resulting nuget package
+# Deploy/publish the resulting nuget package to GitHub Release
+deploy:
+  provider: releases
+  api_key:
+    secure: $OAUTH_TOKEN
+  file_glob: true
+  file: **/LightSlateGray.FileSystemWatcher.*.nupkg
+  skip_cleanup: true
+  on:
+    tags: true
