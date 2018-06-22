@@ -1,4 +1,4 @@
-﻿/// <copyright file="FileSystemEventArgsExtensionsTest.cs">
+/// <copyright file="FileSystemEventArgsExtensionsTest.cs">
 ///   Copyright (c) 2018 LightSlateGray
 /// </copyright>
 /// <author>
@@ -171,7 +171,7 @@ namespace LightSlateGray.FileSystemWatcher.Test
         [DataRow(typeof(RenamedEventArgs), new object[] { WatcherChangeTypes.Renamed, "", "", "" }, FileSystemWatcherEventType.Rename)]
         [DataRow(typeof(RenamedEventArgs), new object[] { WatcherChangeTypes.All, "", "", "" }, FileSystemWatcherEventType.Rename)]
         [DataRow(typeof(RenamedEventArgs), new object[] { WatcherChangeTypes.Created | WatcherChangeTypes.Deleted, "", "", "" }, FileSystemWatcherEventType.Rename)]
-        [DataRow(typeof(RenamedEventArgs), new object[] { WatcherChangeTypes.Created | WatcherChangeTypes.Changed | WatcherChangeTypes.Deleted, "", "" }, FileSystemWatcherEventType.Rename)]
+        [DataRow(typeof(RenamedEventArgs), new object[] { WatcherChangeTypes.Created | WatcherChangeTypes.Changed | WatcherChangeTypes.Deleted, "", "", "" }, FileSystemWatcherEventType.Rename)]
         [DataRow(typeof(ErrorEventArgs), new object[] { null }, FileSystemWatcherEventType.Error)]
         [DataRow(typeof(AssemblyLoadEventArgs), new object[] { null }, FileSystemWatcherEventType.Undefined)]
         [DataRow(typeof(UnhandledExceptionEventArgs), new object[] { null, true }, FileSystemWatcherEventType.Undefined)]
