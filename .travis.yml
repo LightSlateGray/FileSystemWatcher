@@ -1,0 +1,27 @@
+language: csharp
+solution: FileSystemWatcher.sln
+
+# Disabled in order to use .NET Core to build 
+mono: none
+
+# Specify the version of the .NET Core SDK to be used (not the .NET Core runtime)
+# Visit https://www.microsoft.com/net/download/all for a list of available downloads
+dotnet: 2.1.105
+
+# The following commands define the build steps
+script:
+  - dotnet restore
+  - dotnet test --configuration Release FileSystemWatcher.Test
+  - dotnet build --configuration Release FileSystemWatcher.sln
+  - dotnet pack --no-build --configuration Release --include-source FileSystemWatcher
+
+# Deploy/publish the resulting nuget package to GitHub Release
+deploy:
+  provider: releases
+  api_key:
+    secure: $OAUTH_TOKEN
+  file_glob: true
+  file: "**/LightSlateGray.FileSystemWatcher.*.nupkg"
+  skip_cleanup: true
+  on:
+    tags: true
