@@ -6,7 +6,7 @@ mono: none
 
 # Specify the version of the .NET Core SDK to be used (not the .NET Core runtime)
 # Visit https://www.microsoft.com/net/download/all for a list of available downloads
-dotnet: 2.1.105
+dotnet: 2.1.301
 
 # The following commands define the build steps
 script:
